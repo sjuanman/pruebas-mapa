@@ -7,7 +7,6 @@
         <link rel="stylesheet" href="css/estilos.css" />
         <script src="js/jquery.js" type="text/javascript"></script>
         <script src="js/ol.js" type="text/javascript"></script>
-        <script src="geojson/cruces.js" type="text/javascript"></script>
         <script src="geojson/horizontal.js" type="text/javascript"></script>
     </head>
 
@@ -24,8 +23,8 @@
                     target: 'mapCanvas',
                     renderer: 'canvas',
                     view: new ol.View({
-                        projection: 'EPSG:900913',
-                        center: ol.proj.transform([-3.693107, 40.419356], 'EPSG:4326', 'EPSG:900913'),
+                        projection: 'EPSG:3857',
+                        center: ol.proj.transform([-3.693107, 40.419356], 'EPSG:4326', 'EPSG:3857'),
                         zoom: 12
                     })
                 });
@@ -33,12 +32,16 @@
                 var newLayer = new ol.layer.Tile({
                     source: new ol.source.OSM()
                 });
-/*
+
+                map.addLayer(newLayer);
+
+
                 var styleCache = {};
+
                 var geoLayer = new ol.layer.Vector({
                     source: new ol.source.GeoJSON({
                         projection: 'EPSG:900913',
-                        url: './myGeoJson.json'
+                        url: './geojson/cruces.json'
                     }),
                     style: function (feature, resolution) {
                         var text = resolution < 5000 ? feature.get('name') : '';
@@ -68,8 +71,8 @@
                         return styleCache[text];
                     }
                 });
-                
-                */
+
+                map.addLayer(geoLayer);
             }
         </script>
     </body>
