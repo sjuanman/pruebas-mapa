@@ -1,0 +1,16 @@
+*{
+    font-family: Helvetica;
+}
+html{
+    height:100%;
+    width: 100%;
+}
+body{
+    margin: 0;
+    height:100%;
+    width: 100%;
+}
+#mapCanvas{
+    height: 100%;
+    width: 100%;
+}
