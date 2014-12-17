@@ -7,7 +7,6 @@
         <link rel="stylesheet" href="css/estilos.css" />
         <script src="js/jquery.js" type="text/javascript"></script>
         <script src="js/ol.js" type="text/javascript"></script>
-        <script src="geojson/horizontal.js" type="text/javascript"></script>
     </head>
 
     <body>
@@ -17,6 +16,8 @@
         <script>
 
             var map;
+
+            var aa;
 
             function init() {
                 map = new ol.Map({
@@ -36,43 +37,68 @@
                 map.addLayer(newLayer);
 
 
-                var styleCache = {};
+                var styles = {
+                    0: new ol.style.Style({
+                        fill: new ol.style.Fill({
+                            color: 'rgba(255, 0, 0, 0.5)'
+                        }),
+                        stroke: new ol.style.Stroke({
+                            width: 1,
+                            color: 'rgba(255, 0, 0, 1)'
+                        })
+                    }),
+                    1: new ol.style.Style({
+                        fill: new ol.style.Fill({
+                            color: 'rgba(0, 255, 0, 0.5)'
+                        }),
+                        stroke: new ol.style.Stroke({
+                            width: 1,
+                            color: 'rgba(0, 255, 0, 1)'
+                        })
+                    }),
+                    2: new ol.style.Style({
+                        fill: new ol.style.Fill({
+                            color: 'rgba(0, 0, 255, 0.5)'
+                        }),
+                        stroke: new ol.style.Stroke({
+                            width: 1,
+                            color: 'rgba(0, 0, 255, 1)'
+                        })
+                    })
+                };
 
                 var geoLayer = new ol.layer.Vector({
                     source: new ol.source.GeoJSON({
-                        projection: 'EPSG:900913',
+                        projection: 'EPSG:3857',
                         url: './geojson/cruces.json'
                     }),
-                    style: function (feature, resolution) {
-                        var text = resolution < 5000 ? feature.get('name') : '';
-                        if (!styleCache[text]) {
-                            styleCache[text] = [new ol.style.Style({
-                                    fill: new ol.style.Fill({
-                                        color: 'rgba(255, 255, 255, 0.1)'
-                                    }),
-                                    stroke: new ol.style.Stroke({
-                                        color: '#319FD3',
-                                        width: 1
-                                    }),
-                                    text: new ol.style.Text({
-                                        font: '12px Calibri,sans-serif',
-                                        text: text,
-                                        fill: new ol.style.Fill({
-                                            color: '#000'
-                                        }),
-                                        stroke: new ol.style.Stroke({
-                                            color: '#fff',
-                                            width: 3
-                                        })
-                                    }),
-                                    zIndex: 999
-                                })];
-                        }
-                        return styleCache[text];
+                    style: function (feature) {
+                        var aux = feature.get('REGULADOR') % 3;
+                        var s = styles[aux];
+                        return [s];
                     }
                 });
-
+                aa = styles;
                 map.addLayer(geoLayer);
+            }
+
+            function montaVector() {
+                var sol = {};
+                var f = map.getLayers().getArray()[1].getSource().getFeatures();
+
+                for (var i = 0; i < f.length; i++) {
+
+                    sol[f[i].get('IDELEM')] = f[i];
+                }
+
+                return sol;
+            }
+
+            function cambiaColores(v) {
+
+                for (var i in v) {
+                    v[i].set('REGULADOR', Math.round(Math.random() * 100));
+                }
             }
         </script>
     </body>
