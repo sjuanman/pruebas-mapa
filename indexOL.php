@@ -100,6 +100,16 @@
                     v[i].set('REGULADOR', Math.round(Math.random() * 100));
                 }
             }
+
+            var v;
+
+            function flash() {
+                v = montaVector();
+                setInterval(function () {
+                    cambiaColores(v);
+                }, 1000);
+            }
+
         </script>
     </body>
 </html>
